@@ -8,13 +8,14 @@ pygame.init()
 
 WIDTH, HEIGHT = 600, 400
 BLOCK_SIZE = 20
-SNAKE_SPEED = 50
+SNAKE_SPEED = 30
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (213, 50, 80)
 GREEN = (0, 255, 0)
 BLUE = (50, 153, 213)
+top_score = 0
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Snake RL")
@@ -90,9 +91,12 @@ def get_reward(snake_head, prev_distance, food_x, food_y, new_distance, game_clo
     else:
         # Calculate new distance to food
         if new_distance < prev_distance:
-            return 5  # Reward for moving closer
+            return 4  # Reward for moving closer
         else:
             return -2  # Penalty for moving away
+        
+def set_top_score(score):
+    top_score = score
         
 
 ACTIONS = ['STRAIGHT', 'LEFT', 'RIGHT']
@@ -214,6 +218,7 @@ def game_loop(episode):
         # Train the agent
         if step_counter % training_interval == 0 and len(agent.memory) > batch_size:
             agent.replay(batch_size)
+        
 
         if game_close:
             episode_rewards.append(episode_reward)
